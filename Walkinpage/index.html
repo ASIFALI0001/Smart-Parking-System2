@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPark - Walk-in Parking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Background Video -->
+    <div class="video-container">
+        <video class="background-video" autoplay loop muted>
+            <source src="car2live.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Notification Element -->
+    <div class="notification" id="notification">
+        <div class="notification-title">Success!</div>
+        <div class="notification-message">Your action has been completed.</div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <span>Smart</span>Park
+            </div>
+            <div class="real-time">
+                <div class="current-time" id="current-time">00:00:00</div>
+                <div class="date" id="current-date">Loading date...</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Landing Page (Walk-In Section) -->
+        <section id="walkInPage" class="page active">
+            <h2>Walk-In Parking</h2>
+            <form id="walkInForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <div class="input-icon">
+                        <input type="text" id="fullName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="validation-message">Please enter your full name</div>
+                </div>
+                <div class="form-group">
+                    <label for="vehicleNumber">Vehicle Number</label>
+                    <div class="input-icon">
+                        <input type="text" id="vehicleNumber" required placeholder="e.g., KA-01-AB-1234">
+                    </div>
+                    <div class="validation-message">Please enter a valid vehicle number</div>
+                </div>
+                <div class="form-group">
+                    <label for="contactNumber">Contact Number</label>
+                    <div class="input-icon">
+                        <input type="tel" id="contactNumber" required placeholder="e.g., 9876543210">
+                    </div>
+                    <div class="validation-message">Please enter a valid 10-digit contact number</div>
+                </div>
+                <div class="form-group">
+                    <label for="parkingLot">Select Parking Lot</label>
+                    <select id="parkingLot" required>
+                        <option value="" disabled selected>Select a parking lot</option>
+                        <option value="skyline">Skyline Mall</option>
+                        <option value="techpark">Tech Park Central</option>
+                        <option value="downtown">Downtown Parking Hub</option>
+                        <option value="metroheights">Metro Heights Lot</option>
+                        <option value="lakeview">Lakeview Public Parking</option>
+                    </select>
+                    <div class="validation-message">Please select a parking lot</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Walk-In</button>
+            </form>
+        </section>
+
+        <!-- Walk-In Confirmation Page -->
+        <section id="confirmationPage" class="page">
+            <h2>Parking Details</h2>
+            <div class="slot-info">
+                <div class="slot-number" id="slotNumber">Slot No. 6</div>
+                <p>You can park there</p>
+            </div>
+
+            <div class="timer-container">
+                <div class="timer-info tooltip">
+                    <div class="timer-label">Entry Time</div>
+                    <div class="timer-value" id="entryTime">00:00:00</div>
+                    <span class="tooltiptext">When you entered the parking lot</span>
+                </div>
+                <div class="timer-info tooltip">
+                    <div class="timer-label">Duration</div>
+                    <div class="timer-value" id="duration">00:00:00</div>
+                    <span class="tooltiptext">How long you've been parked</span>
+                </div>
+                <div class="timer-info tooltip">
+                    <div class="timer-label">Current Time</div>
+                    <div class="timer-value" id="currentTime">00:00:00</div>
+                    <span class="tooltiptext">Current time</span>
+                </div>
+            </div>
+
+            <div class="price-container">
+                <div class="price-label">Current Charge</div>
+                <div class="price-value" id="currentPrice">₹30</div>
+                <div class="timer-label">Rate: ₹100 per hour</div>
+            </div>
+
+            <div class="payment-method">
+                <h3>Select Payment Method</h3>
+                <div class="payment-options">
+                    <div class="payment-option" data-method="card">
+                        <span class="icon icon-card"></span>Credit/Debit Card
+                    </div>
+                    <div class="payment-option" data-method="upi">
+                        <span class="icon icon-upi"></span>UPI
+                    </div>
+                    <div class="payment-option" data-method="cash">
+                        <span class="icon icon-cash"></span>Cash
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-bar" id="progressBar">
+                <div class="progress"></div>
+            </div>
+
+            <div class="session-controls">
+                <button id="payButton" class="btn btn-primary" disabled>Pay ₹30</button>
+                <button id="endSessionButton" class="btn btn-danger" disabled>End Session</button>
+            </div>
+
+            <div class="session-ended" id="sessionEnded">
+                <div class="checkmark" id="checkmark"></div>
+                Session Ended Successfully
+            </div>
+
+            <button id="walkOutButton" class="btn btn-success" style="display: none;">Walk Out</button>
+        </section>
+    </main>
+
+   <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPark IoT - About</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+
+    <!-- Animated Background -->
+    <div class="animated-background">
+        <div class="stars-container">
+            <div class="stars stars-small"></div>
+            <div class="stars stars-medium"></div>
+            <div class="stars stars-large"></div>
+        </div>
+        <div class="shooting-stars">
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+        </div>
+        <div class="gradient-overlay"></div>
+        <canvas id="three-canvas"></canvas>
+    </div>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">Smart Parking System</div>
+                <nav class="nav-links">
+                    <a href="../index.html" class="nav-link">Home</a>
+                    <a href="#" class="nav-link active">About</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#implementation" class="nav-link">Implementation</a>
+                    <a href="#" class="nav-link">Dashboard</a>
+                </nav>
+                <button class="mobile-menu-btn">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="badge">Second Year Project</div>
+                    <h1 class="hero-title">
+                        <span class="gradient-text">SmartPark</span><br>
+                        <span class="white-text">IoT Parking System</span>
+                    </h1>
+                    <p class="hero-description">
+                        A real-time smart parking management system using IoT sensors and dynamic web interface to
+                        monitor parking space availability and optimize urban parking solutions.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="scrollToFeatures()">
+                            Explore Features
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                        <button class="btn btn-outline" onclick="toggleFlowchart()">
+                            <span id="flowchart-btn-text">Expand Diagram</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Floating Tech Badges -->
+                <div class="floating-badges">
+                    <div class="floating-badge badge-left">
+                        <i data-lucide="server"></i>
+                        <span>Raspberry Pi</span>
+                    </div>
+                    <div class="floating-badge badge-right">
+                        <i data-lucide="code"></i>
+                        <span>Next.js</span>
+                    </div>
+                    <div class="floating-badge badge-bottom">
+                        <i data-lucide="wifi"></i>
+                        <span>IoT Sensors</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Overview Section -->
+        <section class="overview-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Project Overview</h2>
+                    <p class="section-description">
+                        SmartPark revolutionizes urban parking management through IoT technology, providing real-time
+                        monitoring and optimization of parking spaces.
+                    </p>
+                </div>
+
+                <!-- Interactive Flowchart -->
+                <div class="flowchart-container" id="flowchart">
+                    <button class="expand-btn" onclick="toggleFlowchart()">
+                        <i data-lucide="maximize" id="expand-icon"></i>
+                    </button>
+
+                    <div class="flowchart-background"></div>
+                    <svg class="flowchart-svg" id="flowchart-svg"></svg>
+
+                    <!-- Flowchart Nodes -->
+                    <div class="flowchart-nodes" id="flowchart-nodes"></div>
+
+                    <!-- Background Image -->
+                    <div class="flowchart-image">
+                        <img src="flowchartpic.jpg"
+                            alt="System Architecture Flowchart">
+                    </div>
+                </div>
+
+                <!-- Node Details Panel -->
+                <div class="node-details" id="node-details" style="display: none;"></div>
+
+                <!-- Project Description -->
+                <div class="project-description">
+                    <div class="description-card card-blue">
+                        <div class="card-header">
+                            <i data-lucide="zap"></i>
+                            <h3>What We're Building</h3>
+                        </div>
+                        <div class="card-content">
+                            <p>SmartPark is an intelligent, end-to-end parking management system designed to monitor and
+                                display real-time parking space availability using IoT sensors and a dynamic web
+                                interface. The project addresses urban parking challenges by providing a digital
+                                solution that enhances convenience, reduces traffic congestion, and optimizes space
+                                usage.</p>
+                            <p>The system integrates hardware (ultrasonic sensors, Raspberry Pi) with a real-time
+                                cloud-connected web dashboard to provide live updates on whether a particular parking
+                                slot is occupied or vacant. This eliminates the average 10-15 minutes people spend
+                                looking for parking spots.</p>
+                        </div>
+                    </div>
+
+                    <div class="description-card card-purple">
+                        <div class="card-header">
+                            <i data-lucide="activity"></i>
+                            <h3>Key Objectives</h3>
+                        </div>
+                        <div class="card-content">
+                            <ul class="objectives-list">
+                                <li>Build a cost-effective and scalable system for real-time monitoring of parking slots
+                                </li>
+                                <li>Display live slot availability on a web dashboard accessible from any device</li>
+                                <li>Reduce traffic congestion and CO₂ emissions caused by parking searches</li>
+                                <li>Create automated space detection using ultrasonic sensors and distance measurement
+                                </li>
+                                <li>Provide foundation for future enhancements like automated billing and slot
+                                    reservation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Key Features</h2>
+                    <p class="section-description">
+                        Our smart parking system integrates cutting-edge technologies to optimize urban parking through
+                        intelligent monitoring and responsive automation.
+                    </p>
+                </div>
+
+                <div class="features-grid" id="features-grid"></div>
+            </div>
+        </section>
+
+        <!-- Implementation Section -->
+        <section class="implementation-section" id="implementation">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Implementation</h2>
+                    <p class="section-description">
+                        Our system combines multiple technologies to deliver a smart, scalable, and real-time parking
+                        experience.
+                    </p>
+                </div>
+
+                <!-- Implementation Tabs -->
+                <div class="tabs-container">
+                    <div class="tabs-list">
+                        <button class="tab-trigger active" data-tab="hardware">
+                            <i data-lucide="server"></i>
+                            Hardware
+                        </button>
+                        <button class="tab-trigger" data-tab="software">
+                            <i data-lucide="code"></i>
+                            Software
+                        </button>
+                        <button class="tab-trigger" data-tab="connectivity">
+                            <i data-lucide="wifi"></i>
+                            System Flow
+                        </button>
+                    </div>
+
+                    <div class="tabs-content">
+                        <div class="tab-content active" id="hardware-content"></div>
+                        <div class="tab-content" id="software-content"></div>
+                        <div class="tab-content" id="connectivity-content"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Ready to See SmartPark in Action?</h2>
+                    <p>Experience our real-time parking management system and see how IoT technology transforms urban
+                        parking.</p>
+                    <div class="cta-buttons">
+                        <button class="btn btn-primary">View Dashboard Demo</button>
+                        <button class="btn btn-outline" onclick="showFullDiagram()">View Full Diagram</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="team-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Our Team</h2>
+                    <p class="section-description">
+                        The brilliant minds behind this innovative smart home project.
+                    </p>
+                </div>
+
+                <div class="team-grid">
+                    <div class="team-member card-blue">
+                        <div class="member-image">
+                            <img src="asifpic.jpg" alt="MD Asif Ali">
+                        </div>
+                        <div class="member-info">
+                            <h3>MD Asif Ali</h3>
+                            <p>Full Stack Developer | CN Implementation | IoT Integration</p>
+                        </div>
+                    </div>
+
+                    <div class="team-member card-purple">
+                        <div class="member-image">
+                            <img src="kaizy.jpg" alt="Kaizer Dewaswala">
+                        </div>
+                        <div class="member-info">
+                            <h3>Kaizer Dewaswala</h3>
+                            <p>Hardware Engineer | Embedded Systems & IoT Integration Specialist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">Smart Home IoT</div>
+                    <p>© 2025 Final Year Project</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#">GitHub</a>
+                    <a href="#">Documentation</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Full Diagram Modal -->
+    <div class="modal" id="diagram-modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="hideFullDiagram()">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="modal-image">
+                <img src="flowchartpic.jpg"
+                    alt="System Architecture Flowchart">
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

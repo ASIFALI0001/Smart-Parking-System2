@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Parking System - Network Implementation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <span class="logo-text">SmartPark</span>
+      <span class="logo-badge">CN</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#network-flow">Network Flow</a></li>
+        <li><a href="#parking-map">Parking Map</a></li>
+        <li><a href="#osi-model">OSI Model</a></li>
+        <li><a href="#ping-simulator">Ping Simulator</a></li>
+        <li><a href="#testing-tools">Testing Tools</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#geo-map">Geo Map</a></li>
+        <li><a href="#packet-journey">Packet Journey</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="hero">
+      <h1>Smart Parking System</h1>
+      <h2>Computer Networks Implementation</h2>
+      <p>An interactive showcase of network architecture and data flow</p>
+      <div class="cta-buttons">
+        <button id="start-demo-btn" class="glow-button">Start Demo</button>
+        <a href="#" id="download-report" class="neon-button">
+          <span class="neon-button-text">Download CN Report</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </a>
+      </div>
+    </section>
+
+    <section id="network-flow" class="module">
+      <div class="module-header">
+        <h2>🎥 Interactive Network Flow Animation</h2>
+        <p>Visualize how data flows from sensors to your dashboard in real-time</p>
+      </div>
+      <div class="module-content">
+        <div class="canvas-container">
+          <canvas id="network-flow-canvas"></canvas>
+          <div class="network-nodes">
+            <div class="node" id="sensor-node">
+              <div class="node-icon">📡</div>
+              <div class="node-label">Sensor</div>
+            </div>
+            <div class="node" id="raspberry-node">
+              <div class="node-icon">🥧</div>
+              <div class="node-label">Raspberry Pi</div>
+            </div>
+            <div class="node" id="wifi-node">
+              <div class="node-icon">📶</div>
+              <div class="node-label">Wi-Fi</div>
+            </div>
+            <div class="node" id="server-node">
+              <div class="node-icon">🖥️</div>
+              <div class="node-label">Server</div>
+            </div>
+            <div class="node" id="dashboard-node">
+              <div class="node-icon">📊</div>
+              <div class="node-label">Dashboard</div>
+            </div>
+          </div>
+        </div>
+        <div class="network-controls">
+          <button id="trigger-sensor" class="control-button">Trigger Sensor</button>
+          <div class="network-status">
+            <div class="status-label">Status:</div>
+            <div id="network-status-value" class="status-value">Idle</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="parking-map" class="module">
+      <div class="module-header">
+        <h2>🗺️ Real-Time Parking Map Simulation</h2>
+        <p>Click on a parking slot to see how data flows through the network</p>
+      </div>
+      <div class="module-content">
+        <div class="parking-lot">
+          <div class="parking-row">
+            <div class="parking-slot" data-slot="A1">A1</div>
+            <div class="parking-slot" data-slot="A2">A2</div>
+            <div class="parking-slot" data-slot="A3">A3</div>
+            <div class="parking-slot" data-slot="A4">A4</div>
+            <div class="parking-slot" data-slot="A5">A5</div>
+          </div>
+          <div class="parking-row">
+            <div class="parking-slot" data-slot="B1">B1</div>
+            <div class="parking-slot" data-slot="B2">B2</div>
+            <div class="parking-slot" data-slot="B3">B3</div>
+            <div class="parking-slot" data-slot="B4">B4</div>
+            <div class="parking-slot" data-slot="B5">B5</div>
+          </div>
+          <div class="parking-row">
+            <div class="parking-slot" data-slot="C1">C1</div>
+            <div class="parking-slot" data-slot="C2">C2</div>
+            <div class="parking-slot" data-slot="C3">C3</div>
+            <div class="parking-slot" data-slot="C4">C4</div>
+            <div class="parking-slot" data-slot="C5">C5</div>
+          </div>
+        </div>
+        <div class="data-flow-visualization">
+          <h3>Data Flow</h3>
+          <div id="data-flow-steps">
+            <div class="flow-step">
+              <div class="step-icon">🅿️</div>
+              <div class="step-label">Select a parking slot</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="osi-model" class="module">
+      <div class="module-header">
+        <h2>🧱 Layered OSI Model Explanation</h2>
+        <p>Hover over each layer to see how it applies to our Smart Parking System</p>
+      </div>
+      <div class="module-content">
+        <div class="osi-container">
+          <div class="osi-layer" data-layer="application">
+            <div class="layer-number">7</div>
+            <div class="layer-name">Application Layer</div>
+            <div class="layer-tooltip">
+              <h4>Application Layer in SmartPark</h4>
+              <p>REST API endpoints for parking status</p>
+              <code>GET /api/parking/status</code>
+              <p>HTTP/HTTPS protocols for web dashboard</p>
+            </div>
+          </div>
+          <div class="osi-layer" data-layer="presentation">
+            <div class="layer-number">6</div>
+            <div class="layer-name">Presentation Layer</div>
+            <div class="layer-tooltip">
+              <h4>Presentation Layer in SmartPark</h4>
+              <p>JSON data formatting</p>
+              <p>TLS encryption for secure data</p>
+              <code>{"slot": "A1", "status": "occupied"}</code>
+            </div>
+          </div>
+          <div class="osi-layer" data-layer="session">
+            <div class="layer-number">5</div>
+            <div class="layer-name">Session Layer</div>
+            <div class="layer-tooltip">
+              <h4>Session Layer in SmartPark</h4>
+              <p>API authentication sessions</p>
+              <p>WebSocket connections for real-time updates</p>
+              <code>ws://smartpark.com/socket</code>
+            </div>
+          </div>
+          <div class="osi-layer" data-layer="transport">
+            <div class="layer-number">4</div>
+            <div class="layer-name">Transport Layer</div>
+            <div class="layer-tooltip">
+              <h4>Transport Layer in SmartPark</h4>
+              <p>TCP for reliable data transmission</p>
+              <p>Ports: 80 (HTTP), 443 (HTTPS)</p>
+              <code>TCP 192.168.1.10:443</code>
+            </div>
+          </div>
+          <div class="osi-layer" data-layer="network">
+            <div class="layer-number">3</div>
+            <div class="layer-name">Network Layer</div>
+            <div class="layer-tooltip">
+              <h4>Network Layer in SmartPark</h4>
+              <p>IP addressing scheme</p>
+              <p>Routing between sensors and server</p>
+              <code>IP: 192.168.1.x/24</code>
+            </div>
+          </div>
+          <div class="osi-layer" data-layer="datalink">
+            <div class="layer-number">2</div>
+            <div class="layer-name">Data Link Layer</div>
+            <div class="layer-tooltip">
+              <h4>Data Link Layer in SmartPark</h4>
+              <p>Wi-Fi (802.11) for wireless communication</p>
+              <p>MAC addressing and filtering</p>
+              <code>MAC: 00:1A:2B:3C:4D:5E</code>
+            </div>
+          </div>
+          <div class="osi-layer" data-layer="physical">
+            <div class="layer-number">1</div>
+            <div class="layer-name">Physical Layer</div>
+            <div class="layer-tooltip">
+              <h4>Physical Layer in SmartPark</h4>
+              <p>Ultrasonic sensors for car detection</p>
+              <p>ESP32/Raspberry Pi GPIO pins</p>
+              <p>2.4GHz/5GHz Wi-Fi signals</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ping-simulator" class="module">
+      <div class="module-header">
+        <h2>📶 Live Ping/Latency Simulator</h2>
+        <p>Watch packets travel from sensor to server with real-time metrics</p>
+      </div>
+      <div class="module-content">
+        <div class="ping-simulator">
+          <div class="ping-controls">
+            <button id="start-ping" class="control-button">Start Ping</button>
+            <button id="stop-ping" class="control-button" disabled>Stop Ping</button>
+          </div>
+          <div class="ping-visualization">
+            <div class="ping-node" id="ping-sensor">
+              <div class="node-icon">📡</div>
+              <div class="node-label">Sensor</div>
+              <div class="node-ip">192.168.1.100</div>
+            </div>
+            <div class="ping-path"></div>
+            <div class="ping-node" id="ping-gateway">
+              <div class="node-icon">🌐</div>
+              <div class="node-label">Gateway</div>
+              <div class="node-ip">192.168.1.1</div>
+            </div>
+            <div class="ping-path"></div>
+            <div class="ping-node" id="ping-server">
+              <div class="node-icon">🖥️</div>
+              <div class="node-label">Server</div>
+              <div class="node-ip">192.168.1.10</div>
+            </div>
+          </div>
+          <div class="ping-packet" id="ping-packet">
+            <div class="packet-icon">📦</div>
+          </div>
+          <div class="ping-metrics">
+            <div class="metric">
+              <div class="metric-label">Latency:</div>
+              <div id="latency-value" class="metric-value">0 ms</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">TTL:</div>
+              <div id="ttl-value" class="metric-value">64</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Packet Size:</div>
+              <div id="packet-size-value" class="metric-value">64 bytes</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Hops:</div>
+              <div id="hops-value" class="metric-value">2</div>
+            </div>
+          </div>
+          <div class="ping-log">
+            <div class="log-header">Ping Log</div>
+            <div id="ping-log-content" class="log-content"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testing-tools" class="module">
+      <div class="module-header">
+        <h2>🧪 Testing Tools Showcase</h2>
+        <p>Network diagnostic tools used in our Smart Parking System</p>
+      </div>
+      <div class="module-content">
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-buttons">
+              <div class="terminal-button red"></div>
+              <div class="terminal-button yellow"></div>
+              <div class="terminal-button green"></div>
+            </div>
+            <div class="terminal-title">smartpark@server:~</div>
+          </div>
+          <div class="terminal-content">
+            <div class="terminal-toolbar">
+              <button class="tool-button active" data-tool="ping">ping</button>
+              <button class="tool-button" data-tool="traceroute">traceroute</button>
+              <button class="tool-button" data-tool="nmap">nmap</button>
+              <button class="tool-button" data-tool="wireshark">wireshark</button>
+            </div>
+            <div id="terminal-output" class="terminal-output">
+              <div class="command-line">
+                <span class="prompt">smartpark@server:~$</span>
+                <span class="command">ping 192.168.1.100</span>
+              </div>
+              <div class="output-line">PING 192.168.1.100 (192.168.1.100) 56(84) bytes of data.</div>
+              <div class="output-line">64 bytes from 192.168.1.100: icmp_seq=1 ttl=64 time=2.05 ms</div>
+              <div class="output-line">64 bytes from 192.168.1.100: icmp_seq=2 ttl=64 time=1.89 ms</div>
+              <div class="output-line">64 bytes from 192.168.1.100: icmp_seq=3 ttl=64 time=2.12 ms</div>
+              <div class="output-line">64 bytes from 192.168.1.100: icmp_seq=4 ttl=64 time=1.95 ms</div>
+              <div class="output-line">64 bytes from 192.168.1.100: icmp_seq=5 ttl=64 time=2.01 ms</div>
+              <div class="output-line">
+                <br>
+                --- 192.168.1.100 ping statistics ---
+              </div>
+              <div class="output-line">5 packets transmitted, 5 received, 0% packet loss, time 4007ms</div>
+              <div class="output-line">rtt min/avg/max/mdev = 1.890/2.004/2.120/0.086 ms</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="security" class="module">
+      <div class="module-header">
+        <h2>🔒 Security Dashboard Section</h2>
+        <p>Network security measures implemented in our Smart Parking System</p>
+      </div>
+      <div class="module-content">
+        <div class="security-dashboard">
+          <div class="security-card" id="tls-card">
+            <div class="card-header">
+              <div class="card-icon">🔐</div>
+              <div class="card-title">TLS/HTTPS</div>
+            </div>
+            <div class="card-content">
+              <div class="https-visual">
+                <div class="lock-icon">🔒</div>
+                <div class="url-bar">https://smartpark.com</div>
+              </div>
+              <div class="cert-info">
+                <div class="cert-item">
+                  <div class="cert-label">Issued to:</div>
+                  <div class="cert-value">smartpark.com</div>
+                </div>
+                <div class="cert-item">
+                  <div class="cert-label">Issued by:</div>
+                  <div class="cert-value">Let's Encrypt</div>
+                </div>
+                <div class="cert-item">
+                  <div class="cert-label">Valid until:</div>
+                  <div class="cert-value">2025-08-15</div>
+                </div>
+                <div class="cert-item">
+                  <div class="cert-label">Encryption:</div>
+                  <div class="cert-value">TLS 1.3, AES-256-GCM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="security-card" id="firewall-card">
+            <div class="card-header">
+              <div class="card-icon">🧱</div>
+              <div class="card-title">Firewall Rules</div>
+            </div>
+            <div class="card-content">
+              <table class="firewall-rules">
+                <thead>
+                  <tr>
+                    <th>Rule</th>
+                    <th>Port</th>
+                    <th>Protocol</th>
+                    <th>Source</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>80</td>
+                    <td>TCP</td>
+                    <td>Any</td>
+                    <td class="allow">ALLOW</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>443</td>
+                    <td>TCP</td>
+                    <td>Any</td>
+                    <td class="allow">ALLOW</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>22</td>
+                    <td>TCP</td>
+                    <td>192.168.1.0/24</td>
+                    <td class="allow">ALLOW</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>1883</td>
+                    <td>TCP</td>
+                    <td>192.168.1.0/24</td>
+                    <td class="allow">ALLOW</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Any</td>
+                    <td>Any</td>
+                    <td>Any</td>
+                    <td class="deny">DENY</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="security-card" id="ports-card">
+            <div class="card-header">
+              <div class="card-icon">🚪</div>
+              <div class="card-title">Open/Closed Ports</div>
+            </div>
+            <div class="card-content">
+              <div class="ports-visual">
+                <div class="port-item">
+                  <div class="port-number">22</div>
+                  <div class="port-name">SSH</div>
+                  <div class="port-status closed">Filtered</div>
+                </div>
+                <div class="port-item">
+                  <div class="port-number">80</div>
+                  <div class="port-name">HTTP</div>
+                  <div class="port-status open">Open</div>
+                </div>
+                <div class="port-item">
+                  <div class="port-number">443</div>
+                  <div class="port-name">HTTPS</div>
+                  <div class="port-status open">Open</div>
+                </div>
+                <div class="port-item">
+                  <div class="port-number">1883</div>
+                  <div class="port-name">MQTT</div>
+                  <div class="port-status open">Open</div>
+                </div>
+                <div class="port-item">
+                  <div class="port-number">3306</div>
+                  <div class="port-name">MySQL</div>
+                  <div class="port-status closed">Closed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="security-card" id="mac-card">
+            <div class="card-header">
+              <div class="card-icon">🔍</div>
+              <div class="card-title">MAC Filtering</div>
+            </div>
+            <div class="card-content">
+              <div class="mac-filtering">
+                <div class="mac-header">Authorized Devices</div>
+                <div class="mac-list">
+                  <div class="mac-item">
+                    <div class="mac-address">00:1A:2B:3C:4D:5E</div>
+                    <div class="mac-device">Sensor Node A</div>
+                    <div class="mac-status authorized">Authorized</div>
+                  </div>
+                  <div class="mac-item">
+                    <div class="mac-address">00:1A:2B:3C:4D:5F</div>
+                    <div class="mac-device">Sensor Node B</div>
+                    <div class="mac-status authorized">Authorized</div>
+                  </div>
+                  <div class="mac-item">
+                    <div class="mac-address">00:1A:2B:3C:4D:60</div>
+                    <div class="mac-device">Gateway</div>
+                    <div class="mac-status authorized">Authorized</div>
+                  </div>
+                  <div class="mac-item">
+                    <div class="mac-address">00:1A:2B:3C:4D:61</div>
+                    <div class="mac-device">Admin Laptop</div>
+                    <div class="mac-status authorized">Authorized</div>
+                  </div>
+                  <div class="mac-item">
+                    <div class="mac-address">00:1A:2B:3C:4D:62</div>
+                    <div class="mac-device">Unknown Device</div>
+                    <div class="mac-status unauthorized">Blocked</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="geo-map" class="module">
+      <div class="module-header">
+        <h2>🌍 GeoMap of System Reachability</h2>
+        <p>Visualize how your Smart Parking System can be accessed globally</p>
+      </div>
+      <div class="module-content">
+        <div class="geo-map-container">
+          <div class="geo-map" id="geo-map-svg">
+            <!-- SVG World Map will be inserted here by JavaScript -->
+          </div>
+          <div class="map-controls">
+            <button id="zoom-in" class="map-control-button">+</button>
+            <button id="zoom-out" class="map-control-button">-</button>
+            <button id="reset-map" class="map-control-button">Reset</button>
+          </div>
+          <div class="map-legend">
+            <div class="legend-item">
+              <div class="legend-color parking"></div>
+              <div class="legend-label">Parking Lot</div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color server"></div>
+              <div class="legend-label">Server</div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color client"></div>
+              <div class="legend-label">Client Access</div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color data-path"></div>
+              <div class="legend-label">Data Path</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="packet-journey" class="module">
+      <div class="module-header">
+        <h2>🧾 Packet Journey Infographic</h2>
+        <p>Follow the complete journey of data in our Smart Parking System</p>
+      </div>
+      <div class="module-content">
+        <div class="packet-journey">
+          <div class="journey-step" id="step-car">
+            <div class="step-icon">🚗</div>
+            <div class="step-title">Car Arrives</div>
+            <div class="step-description">Vehicle enters the parking area</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step" id="step-sensor">
+            <div class="step-icon">📡</div>
+            <div class="step-title">Sensor Detects</div>
+            <div class="step-description">Ultrasonic sensor detects presence</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step" id="step-pi">
+            <div class="step-icon">🥧</div>
+            <div class="step-title">Pi Processes</div>
+            <div class="step-description">Raspberry Pi processes sensor data</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step" id="step-request">
+            <div class="step-icon">📤</div>
+            <div class="step-title">HTTP Request</div>
+            <div class="step-description">Data sent via HTTP POST</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step" id="step-server">
+            <div class="step-icon">🖥️</div>
+            <div class="step-title">Server Logs</div>
+            <div class="step-description">Server receives and stores data</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step" id="step-dashboard">
+            <div class="step-icon">📊</div>
+            <div class="step-title">Dashboard Updates</div>
+            <div class="step-description">UI reflects new parking status</div>
+          </div>
+        </div>
+        <div class="packet-details">
+          <h3>Packet Details</h3>
+          <div class="packet-viewer">
+            <div class="packet-header">HTTP POST Request</div>
+            <div class="packet-content">
+              <pre><code>POST /api/parking/update HTTP/1.1
+Host: smartpark.com
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+{
+  "slotId": "A1",
+  "status": "occupied",
+  "timestamp": "2025-05-26T18:45:12Z",
+  "sensorId": "sensor-001",
+  "confidence": 0.98
+}</code></pre>
+            </div>
+          </div>
+          <div class="packet-viewer">
+            <div class="packet-header">HTTP Response</div>
+            <div class="packet-content">
+              <pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 26 May 2025 18:45:12 GMT
+
+{
+  "success": true,
+  "message": "Parking status updated",
+  "slotId": "A1",
+  "status": "occupied"
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="protocols-used" class="module">
+  <div class="module-header">
+    <h2>📡 Protocols Used</h2>
+    <p>Communication standards powering our network</p>
+  </div>
+  <div class="module-content">
+    <div class="protocol-cards">
+      <div class="protocol-card flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="protocol-header">HTTP</div>
+            <div class="protocol-title">HTTP/HTTPS</div>
+            <p class="protocol-hint">Click to learn more</p>
+          </div>
+          <div class="flip-card-back">
+            <h3>HTTP/HTTPS Protocol</h3>
+            <p>Used for RESTful API communication between server and client applications.</p>
+            <ul>
+              <li>Port: 443 (HTTPS)</li>
+              <li>Layer: Application</li>
+              <li>Security: TLS 1.3</li>
+              <li>Methods: GET, POST, PUT, DELETE</li>
+            </ul>
+            <p>In SmartPark, HTTPS secures all API calls between sensors, server, and dashboard.</p>
+          </div>
+        </div>
+      </div>
+      <div class="protocol-card flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="protocol-header">MQTT</div>
+            <div class="protocol-title">MQTT</div>
+            <p class="protocol-hint">Click to learn more</p>
+          </div>
+          <div class="flip-card-back">
+            <h3>MQTT Protocol</h3>
+            <p>Lightweight messaging protocol for sensor data transmission.</p>
+            <ul>
+              <li>Port: 1883/8883 (TLS)</li>
+              <li>Layer: Application</li>
+              <li>Pattern: Publish/Subscribe</li>
+              <li>QoS Levels: 0, 1, 2</li>
+            </ul>
+            <p>SmartPark uses MQTT for real-time sensor updates with minimal bandwidth.</p>
+          </div>
+        </div>
+      </div>
+      <div class="protocol-card flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="protocol-header">TCP/IP</div>
+            <div class="protocol-title">TCP/IP</div>
+            <p class="protocol-hint">Click to learn more</p>
+          </div>
+          <div class="flip-card-back">
+            <h3>TCP/IP Protocol Suite</h3>
+            <p>Foundation protocol suite for reliable data transmission.</p>
+            <ul>
+              <li>Layer: Transport/Network</li>
+              <li>Connection: Connection-oriented</li>
+              <li>Features: Flow control, error recovery</li>
+              <li>Addressing: IPv4/IPv6</li>
+            </ul>
+            <p>TCP ensures reliable data delivery between all SmartPark components.</p>
+          </div>
+        </div>
+      </div>
+      <div class="protocol-card flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="protocol-header">802.11</div>
+            <div class="protocol-title">Wi-Fi (802.11)</div>
+            <p class="protocol-hint">Click to learn more</p>
+          </div>
+          <div class="flip-card-back">
+            <h3>Wi-Fi (802.11) Protocol</h3>
+            <p>Wireless networking standard for device connectivity.</p>
+            <ul>
+              <li>Frequency: 2.4/5GHz</li>
+              <li>Layer: Data Link/Physical</li>
+              <li>Security: WPA2-Enterprise</li>
+              <li>Standards: 802.11n/ac/ax</li>
+            </ul>
+            <p>SmartPark sensors connect wirelessly using Wi-Fi for flexibility and ease of deployment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="real-time-monitor" class="module">
+  <div class="module-header">
+    <h2>📊 Real-Time Network Monitor</h2>
+    <p>Live visualization of network traffic and performance</p>
+  </div>
+  <div class="module-content">
+    <div class="network-monitor-container">
+      <div class="monitor-controls">
+        <button id="start-monitor" class="control-button">Start Monitoring</button>
+        <button id="stop-monitor" class="control-button" disabled>Stop Monitoring</button>
+        <select id="monitor-interval" class="monitor-select">
+          <option value="1000">Update: 1s</option>
+          <option value="2000" selected>Update: 2s</option>
+          <option value="5000">Update: 5s</option>
+        </select>
+      </div>
+      <div class="monitor-grid">
+        <div class="monitor-card">
+          <div class="monitor-card-header">
+            <h3>Network Traffic</h3>
+          </div>
+          <div class="monitor-card-content">
+            <canvas id="traffic-chart"></canvas>
+          </div>
+        </div>
+        <div class="monitor-card">
+          <div class="monitor-card-header">
+            <h3>Packet Success Rate</h3>
+          </div>
+          <div class="monitor-card-content">
+            <div class="gauge-container">
+              <canvas id="success-gauge"></canvas>
+              <div id="success-rate-value" class="gauge-value">0%</div>
+            </div>
+          </div>
+        </div>
+        <div class="monitor-card">
+          <div class="monitor-card-header">
+            <h3>Active Connections</h3>
+          </div>
+          <div class="monitor-card-content">
+            <div class="connections-list" id="connections-list">
+              <div class="connection-item">
+                <div class="connection-icon">📱</div>
+                <div class="connection-details">
+                  <div class="connection-name">Admin Dashboard</div>
+                  <div class="connection-ip">192.168.1.5:52134</div>
+                </div>
+                <div class="connection-status active">Active</div>
+              </div>
+              <div class="connection-item">
+                <div class="connection-icon">🚗</div>
+                <div class="connection-details">
+                  <div class="connection-name">Sensor Node A1</div>
+                  <div class="connection-ip">192.168.1.101:8883</div>
+                </div>
+                <div class="connection-status active">Active</div>
+              </div>
+              <div class="connection-item">
+                <div class="connection-icon">🚗</div>
+                <div class="connection-details">
+                  <div class="connection-name">Sensor Node B3</div>
+                  <div class="connection-ip">192.168.1.103:8883</div>
+                </div>
+                <div class="connection-status active">Active</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="monitor-card">
+          <div class="monitor-card-header">
+            <h3>Network Events</h3>
+          </div>
+          <div class="monitor-card-content">
+            <div class="events-log" id="events-log">
+              <div class="event-item">
+                <div class="event-time">18:54:32</div>
+                <div class="event-type info">INFO</div>
+                <div class="event-message">Sensor Node A1 connected</div>
+              </div>
+              <div class="event-item">
+                <div class="event-time">18:53:15</div>
+                <div class="event-type warning">WARN</div>
+                <div class="event-message">High latency detected on Sensor Node B2</div>
+              </div>
+              <div class="event-item">
+                <div class="event-time">18:50:03</div>
+                <div class="event-type error">ERROR</div>
+                <div class="event-message">Connection timeout for Sensor Node C5</div>
+              </div>
+              <div class="event-item">
+                <div class="event-time">18:48:57</div>
+                <div class="event-type info">INFO</div>
+                <div class="event-message">System backup completed successfully</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section id="summary" class="module">
+      <div class="module-header">
+        <h2>🧠 Summary Table</h2>
+        <p>Key network features of our Smart Parking System</p>
+      </div>
+      <div class="module-content">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Benefit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Animated packet flow</td>
+              <td>Engages visually, shows data path</td>
+            </tr>
+            <tr>
+              <td>OSI hover cards</td>
+              <td>Connects textbook concepts to project</td>
+            </tr>
+            <tr>
+              <td>Live ping/trace sim</td>
+              <td>Mimics real CN tools</td>
+            </tr>
+            <tr>
+              <td>Layered security cards</td>
+              <td>Show depth of network protection</td>
+            </tr>
+            <tr>
+              <td>Packet journey story</td>
+              <td>End-to-end CN illustration</td>
+            </tr>
+            <tr>
+              <td>Downloadable PDF</td>
+              <td>Helpful for presentations, documentation</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <span class="logo-text">SmartPark</span>
+        <span class="logo-badge">CN</span>
+      </div>
+      <div class="footer-links">
+        <a href="#network-flow">Network Flow</a>
+        <a href="#parking-map">Parking Map</a>
+        <a href="#osi-model">OSI Model</a>
+        <a href="#ping-simulator">Ping Simulator</a>
+        <a href="#testing-tools">Testing Tools</a>
+        <a href="#security">Security</a>
+        <a href="#geo-map">Geo Map</a>
+        <a href="#packet-journey">Packet Journey</a>
+      </div>
+      <div class="footer-copyright">
+        &copy; 2025 SmartPark - Computer Networks Implementation
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

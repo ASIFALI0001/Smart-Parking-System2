@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Parking Lot Designer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OrbitControls/1.2/OrbitControls.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0f1222;
+            --bg-secondary: #191f45;
+            --glow-cyan: rgba(0, 255, 255, 0.7);
+            --glow-purple: rgba(150, 0, 255, 0.7);
+            --glow-red: rgba(255, 0, 0, 0.7);
+            --glow-green: rgba(0, 255, 0, 0.7);
+            --text-primary: #ffffff;
+            --text-secondary: #aaaadd;
+            --glass-bg: rgba(25, 31, 69, 0.25);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--glow-cyan);
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+            box-shadow: 0 0 15px var(--glow-cyan);
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(15, 18, 34, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--glow-cyan);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        button {
+            background: linear-gradient(45deg, #0f1222, #1b2352);
+            color: var(--text-primary);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            box-shadow: 0 0 15px var(--glow-cyan);
+            background: linear-gradient(45deg, #1b2352, #0f1222);
+        }
+
+        .btn-primary {
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .btn-secondary {
+            border-color: rgba(150, 0, 255, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Canvas Styles */
+        .canvas-container {
+            display: flex;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 600px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .canvas-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .canvas-controls button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+
+        .slot-type-sidebar {
+            width: 200px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slot-type-item {
+            padding: 12px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slot-type-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slot-type-item:hover:not(.disabled) {
+            transform: translateY(-2px);
+        }
+
+        .slot-type-item.general {
+            border: 1px solid #4facfe;
+            color: #4facfe;
+            box-shadow: 0 0 5px rgba(79, 172, 254, 0.5);
+        }
+
+        .slot-type-item.vip {
+            border: 1px solid #a964fe;
+            color: #a964fe;
+            box-shadow: 0 0 5px rgba(169, 100, 254, 0.5);
+        }
+
+        .slot-type-item.emergency {
+            border: 1px solid #fe4f4f;
+            color: #fe4f4f;
+            box-shadow: 0 0 5px rgba(254, 79, 79, 0.5);
+        }
+
+        .slot-type-item.ev {
+            border: 1px solid #4ffe91;
+            color: #4ffe91;
+            box-shadow: 0 0 5px rgba(79, 254, 145, 0.5);
+        }
+
+        .slot-type-item.selected {
+            transform: scale(1.05);
+        }
+
+        .slot-type-item.general.selected {
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.8);
+        }
+
+        .slot-type-item.vip.selected {
+            box-shadow: 0 0 15px rgba(169, 100, 254, 0.8);
+        }
+
+        .slot-type-item.emergency.selected {
+            box-shadow: 0 0 15px rgba(254, 79, 79, 0.8);
+        }
+
+        .slot-type-item.ev.selected {
+            box-shadow: 0 0 15px rgba(79, 254, 145, 0.8);
+        }
+
+        .slot-count {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            background: rgba(15, 18, 34, 0.7);
+        }
+
+        .canvas-area {
+            flex: 1;
+            position: relative;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transform: translateY(-50px);
+            transition: all 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
+        .summary-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, rgba(15, 18, 34, 0.7), rgba(27, 35, 82, 0.7));
+            border-radius: var(--border-radius);
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-card h4 {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .summary-card p {
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            margin-bottom: 30px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            }
+
+            to {
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Futuristic Parking Lot Designer</h1>
+            <h2>Create and customize your smart parking solution</h2>
+        </header>
+
+        <div class="step-indicator">
+            <div class="step active" data-step="1">Step 1: Define</div>
+            <div class="step" data-step="2">Step 2: Design</div>
+            <div class="step" data-step="3">Step 3: Configure</div>
+            <div class="step" data-step="4">Step 4: Save</div>
+        </div>
+
+        <!-- Step 1: Define Parking Lot -->
+        <section id="step1" class="step-content">
+            <div class="form-container">
+                <h2>Parking Lot Information</h2>
+                <div class="form-group">
+                    <label for="parkingLotName">Parking Lot Name</label>
+                    <input type="text" id="parkingLotName" placeholder="Enter parking lot name">
+                </div>
+                <div class="form-group">
+                    <label for="totalSlots">Total Number of Slots</label>
+                    <input type="number" id="totalSlots" min="1" placeholder="Enter total number of slots">
+                </div>
+                <div class="form-group">
+                    <label for="generalSlots">Number of General Slots</label>
+                    <input type="number" id="generalSlots" min="0" placeholder="Enter number of general slots">
+                </div>
+                <div class="form-group">
+                    <label for="vipSlots">Number of VIP Slots</label>
+                    <input type="number" id="vipSlots" min="0" placeholder="Enter number of VIP slots">
+                </div>
+                <div class="form-group">
+                    <label for="emergencySlots">Number of Emergency Slots (max: 3)</label>
+                    <input type="number" id="emergencySlots" min="0" max="3"
+                        placeholder="Enter number of emergency slots">
+                </div>
+                <div class="form-group">
+                    <label for="evSlots">Number of EV Charging Slots</label>
+                    <input type="number" id="evSlots" min="0" placeholder="Enter number of EV charging slots">
+                </div>
+                <div class="button-group">
+                    <button id="nextToStep2" class="btn-primary">Next: Design Layout</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Design Layout -->
+        <section id="step2" class="step-content hidden">
+            <div class="canvas-container">
+                <div class="slot-type-sidebar">
+                    <h3>Parking Slots</h3>
+                    <div class="slot-type-item general selected" data-type="general">
+                        <span>✅ General</span>
+                        <span class="slot-count" id="generalCount">0</span>
+                    </div>
+                    <div class="slot-type-item vip" data-type="vip">
+                        <span>👑 VIP</span>
+                        <span class="slot-count" id="vipCount">0</span>
+                    </div>
+                    <div class="slot-type-item emergency" data-type="emergency">
+                        <span>🚨 Emergency</span>
+                        <span class="slot-count" id="emergencyCount">0</span>
+                    </div>
+                    <div class="slot-type-item ev" data-type="ev">
+                        <span>⚡ EV Charging</span>
+                        <span class="slot-count" id="evCount">0</span>
+                    </div>
+                </div>
+                <div class="canvas-area" id="canvasArea">
+                    <div class="instructions">
+                        <h4>Controls:</h4>
+                        <p>• Select a slot type from the sidebar</p>
+                        <p>• Click anywhere on the grid to place a slot</p>
+                        <p>• Drag to move slots</p>
+                        <p>• Zoom with mouse wheel</p>
+                        <p>• Pan by right-click drag</p>
+                        <p>• Rotate view with left-click drag</p>
+                    </div>
+                </div>
+                <div class="canvas-controls">
+                    <button id="zoomIn" class="btn-primary">Zoom In</button>
+                    <button id="zoomOut" class="btn-primary">Zoom Out</button>
+                    <button id="resetView" class="btn-secondary">Reset View</button>
+                </div>
+            </div>
+            <div class="button-group">
+                <button id="backToStep1" class="btn-secondary">Back</button>
+                <button id="nextToStep3" class="btn-primary">Next: Configure Slots</button>
+            </div>
+        </section>
+
+        <!-- Step 3: Configure Slots -->
+        <section id="step3" class="step-content hidden">
+            <div class="form-container">
+                <h2>Slot Configuration</h2>
+                <p>Click on any slot in the layout to configure its details.</p>
+                <div id="slot-config-instructions" class="form-group">
+                    <ul>
+                        <li class="vip">VIP Slots: Configure name, car number, phone number, and designation</li>
+                        <li class="emergency">Emergency Slots: Set emergency type, vehicle number, and contact
+                            information</li>
+                        <li class="general">General Slots: No additional configuration needed</li>
+                        <li class="ev">EV Charging Slots: No additional configuration needed</li>
+                    </ul>
+                </div>
+                <div class="button-group">
+                    <button id="backToStep2" class="btn-secondary">Back</button>
+                    <button id="nextToStep4" class="btn-primary">Next: Save Layout</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 4: Save Layout -->
+        <section id="step4" class="step-content hidden">
+            <div class="summary-container">
+                <h2>Parking Lot Summary</h2>
+                <div id="summary-basic" class="form-group">
+                    <h3>Basic Information</h3>
+                    <p id="summary-name"></p>
+                    <p id="summary-total"></p>
+                </div>
+                <div id="summary-slots">
+                    <h3>Slot Distribution</h3>
+                    <div class="summary-grid">
+                        <div class="summary-card general">
+                            <h4>General Slots</h4>
+                            <p id="summary-general-count"></p>
+                        </div>
+                        <div class="summary-card vip">
+                            <h4>VIP Slots</h4>
+                            <p id="summary-vip-count"></p>
+                        </div>
+                        <div class="summary-card emergency">
+                            <h4>Emergency Slots</h4>
+                            <p id="summary-emergency-count"></p>
+                        </div>
+                        <div class="summary-card ev">
+                            <h4>EV Charging Slots</h4>
+                            <p id="summary-ev-count"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="backToStep3" class="btn-secondary">Back</button>
+                    <button id="saveLayout" class="btn-primary">Save Layout</button>
+                    <button id="loadLayout" class="btn-secondary">Load Previous Layout</button>
+                </div>
+            </div>
+            <div id="success-message" class="success-message hidden">
+                <h2>Layout Saved Successfully!</h2>
+                <p>Your parking lot design has been saved. You can edit it anytime.</p>
+                <button id="editLayout" class="btn-primary">Edit Layout</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal for Slot Configuration -->
+    <div id="slotConfigModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Configure Slot</h3>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div id="vip-config" class="slot-config-form hidden">
+                <div class="form-group">
+                    <label for="vipName">Name</label>
+                    <input type="text" id="vipName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="vipCarNumber">Car Number</label>
+                    <input type="text" id="vipCarNumber" placeholder="Enter car number">
+                </div>
+                <div class="form-group">
+                    <label for="vipPhone">Phone Number</label>
+                    <input type="text" id="vipPhone" placeholder="Enter phone number">
+                </div>
+                <div class="form-group">
+                    <label for="vipDesignation">Designation</label>
+                    <input type="text" id="vipDesignation" placeholder="Enter designation">
+                </div>
+            </div>
+            <div id="emergency-config" class="slot-config-form hidden">
+                <div class="form-group">
+                    <label for="emergencyType">Emergency Type</label>
+                    <select id="emergencyType">
+                        <option value="police">Police</option>
+                        <option value="ambulance">Ambulance</option>
+                        <option value="firefighter">Firefighter</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="emergencyVehicle">Vehicle Number</label>
+                    <input type="text" id="emergencyVehicle" placeholder="Enter vehicle number">
+                </div>
+                <div class="form-group">
+                    <label for="emergencyContact">Contact Number</label>
+                    <input type="text" id="emergencyContact" placeholder="Enter contact number">
+                </div>
+            </div>
+            <div class="button-group">
+                <button id="saveSlotConfig" class="btn-primary">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+const state = {
+    currentStep: 1,
+    parkingLot: {
+        name: '',
+        totalSlots: 0,
+        generalSlots: 0,
+        vipSlots: 0,
+        emergencySlots: 0,
+        evSlots: 0
+    },
+    slots: [],
+    selectedSlotType: 'general',
+    selectedSlot: null,
+    scene: null,
+    camera: null,
+    renderer: null,
+    controls: null,
+    raycaster: new THREE.Raycaster(),
+    mouse: new THREE.Vector2(),
+    plane: new THREE.Plane(new THREE.Vector3(0, 0, 1), 0),
+    planeNormal: new THREE.Vector3(0, 0, 1),
+    intersection: new THREE.Vector3(),
+    offset: new THREE.Vector3(),
+    isDragging: false,
+    dragObject: null,
+    availableSlots: {
+        general: 0,
+        vip: 0,
+        emergency: 0,
+        ev: 0
+    }
+};
+
+// DOM Elements
+const elements = {
+    steps: document.querySelectorAll('.step'),
+    stepContents: document.querySelectorAll('.step-content'),
+    nextToStep2: document.getElementById('nextToStep2'),
+    backToStep1: document.getElementById('backToStep1'),
+    nextToStep3: document.getElementById('nextToStep3'),
+    backToStep2: document.getElementById('backToStep2'),
+    nextToStep4: document.getElementById('nextToStep4'),
+    backToStep3: document.getElementById('backToStep3'),
+    saveLayout: document.getElementById('saveLayout'),
+    loadLayout: document.getElementById('loadLayout'),
+    editLayout: document.getElementById('editLayout'),
+    slotTypeItems: document.querySelectorAll('.slot-type-item'),
+    zoomIn: document.getElementById('zoomIn'),
+    zoomOut: document.getElementById('zoomOut'),
+    resetView: document.getElementById('resetView'),
+    canvasArea: document.getElementById('canvasArea'),
+    slotConfigModal: document.getElementById('slotConfigModal'),
+    closeModal: document.getElementById('closeModal'),
+    saveSlotConfig: document.getElementById('saveSlotConfig'),
+    vipConfig: document.getElementById('vip-config'),
+    emergencyConfig: document.getElementById('emergency-config'),
+    successMessage: document.getElementById('success-message'),
+    // New counter elements
+    generalCount: document.getElementById('generalCount'),
+    vipCount: document.getElementById('vipCount'),
+    emergencyCount: document.getElementById('emergencyCount'),
+    evCount: document.getElementById('evCount')
+};
+
+// Slot type colors
+const slotColors = {
+    general: 0x4facfe,  // Cyan
+    vip: 0xa964fe,      // Purple
+    emergency: 0xfe4f4f, // Red
+    ev: 0x4ffe91        // Green
+};
+
+// Initialize Three.js Scene
+function initThreeJS() {
+    // Create scene
+    state.scene = new THREE.Scene();
+    state.scene.background = new THREE.Color(0x0f1222);
+
+    // Create camera
+    state.camera = new THREE.PerspectiveCamera(75, elements.canvasArea.clientWidth / elements.canvasArea.clientHeight, 0.1, 1000);
+    state.camera.position.set(0, -15, 20);
+    state.camera.lookAt(0, 0, 0);
+
+    // Create renderer
+    state.renderer = new THREE.WebGLRenderer({ antialias: true });
+    state.renderer.setSize(elements.canvasArea.clientWidth, elements.canvasArea.clientHeight);
+    state.renderer.shadowMap.enabled = true;
+    elements.canvasArea.appendChild(state.renderer.domElement);
+
+    // Create grid for better visualization
+    const gridHelper = new THREE.GridHelper(50, 50, 0x444444, 0x222222);
+    gridHelper.rotation.x = Math.PI / 2; // Make grid horizontal
+    state.scene.add(gridHelper);
+
+    // Add a ground plane for raycasting
+    const groundGeometry = new THREE.PlaneGeometry(100, 100);
+    const groundMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0x0f1222, 
+        transparent: true, 
+        opacity: 0.1,
+        side: THREE.DoubleSide
+    });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.z = -0.1;
+    ground.receiveShadow = true;
+    state.scene.add(ground);
+
+    // Create orbit controls with proper configuration
+    state.controls = new THREE.OrbitControls(state.camera, state.renderer.domElement);
+    state.controls.enableDamping = true;
+    state.controls.dampingFactor = 0.25;
+    state.controls.enableZoom = true;
+    state.controls.autoRotate = false;
+    state.controls.maxPolarAngle = Math.PI / 2.2;
+    state.controls.screenSpacePanning = true; // Important for proper dragging behavior
+
+    // Add ambient light
+    const ambientLight = new THREE.AmbientLight(0x333333, 0.5);
+    state.scene.add(ambientLight);
+
+    // Add directional light
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(10, 10, 10);
+    directionalLight.castShadow = true;
+    state.scene.add(directionalLight);
+
+    // Add point lights for better aesthetics
+    const pointLight1 = new THREE.PointLight(0x4facfe, 1, 50);
+    pointLight1.position.set(10, 10, 10);
+    state.scene.add(pointLight1);
+
+    const pointLight2 = new THREE.PointLight(0xa964fe, 1, 50);
+    pointLight2.position.set(-10, -10, 10);
+    state.scene.add(pointLight2);
+
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+        state.controls.update();
+        state.renderer.render(state.scene, state.camera);
+    }
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        state.camera.aspect = elements.canvasArea.clientWidth / elements.canvasArea.clientHeight;
+        state.camera.updateProjectionMatrix();
+        state.renderer.setSize(elements.canvasArea.clientWidth, elements.canvasArea.clientHeight);
+    });
+
+    // Initialize the plane for intersection detection
+    state.plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+    // Setup event listeners for canvas interactions
+    setupCanvasInteractions();
+    
+    console.log('Three.js initialized successfully');
+}
+
+// Setup Canvas Interactions
+function setupCanvasInteractions() {
+    const canvas = state.renderer.domElement;
+
+    // Mouse down event - start dragging or select slot
+    canvas.addEventListener('mousedown', (event) => {
+        // Skip if right mouse button (for orbit controls)
+        if (event.button !== 0) return;
+
+        event.preventDefault();
+
+        // Calculate mouse position in normalized device coordinates (-1 to +1)
+        const rect = canvas.getBoundingClientRect();
+        state.mouse.x = ((event.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+        state.mouse.y = -((event.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+
+        // Update the picking ray with the camera and mouse position
+        state.raycaster.setFromCamera(state.mouse, state.camera);
+
+        // Check if we're clicking on an existing slot
+        const intersects = state.raycaster.intersectObjects(state.slots);
+        
+        if (intersects.length > 0) {
+            // We clicked on an existing slot
+            state.isDragging = true;
+            state.dragObject = intersects[0].object;
+            
+            // Store offset for accurate dragging
+            const intersectionPoint = intersects[0].point;
+            state.offset.copy(intersectionPoint).sub(state.dragObject.position);
+            
+            // Highlight selected slot with a scale effect
+            state.dragObject.scale.set(1.1, 1.1, 1.1);
+            
+            // If in Step 3, open configuration modal
+            if (state.currentStep === 3) {
+                openSlotConfigModal(state.dragObject);
+            }
+        } else {
+            // Check if we're trying to place a new slot
+            if (state.currentStep === 2) {
+                // Check if we have slots of this type available
+                if (state.availableSlots[state.selectedSlotType] > 0) {
+                    // Create intersection point with ground plane (z=0) 
+                    const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+                    const intersectPoint = new THREE.Vector3();
+                    
+                    // Get intersection point with the ground plane
+                    state.raycaster.ray.intersectPlane(planeZ, intersectPoint);
+                    
+                    // Snap to grid
+                    intersectPoint.x = Math.round(intersectPoint.x / 2) * 2;
+                    intersectPoint.y = Math.round(intersectPoint.y / 2) * 2;
+                    intersectPoint.z = 0;
+                    
+                    console.log('Creating slot at:', intersectPoint);
+                    
+                    // Create and place a new slot
+                    createSlot(state.selectedSlotType, intersectPoint.x, intersectPoint.y);
+                    
+                    // Decrement available slots counter
+                    state.availableSlots[state.selectedSlotType]--;
+                    updateSlotCounters();
+                    
+                    // Disable the slot type button if no more slots available
+                    if (state.availableSlots[state.selectedSlotType] === 0) {
+                        const slotTypeItem = document.querySelector(`.slot-type-item.${state.selectedSlotType}`);
+                        slotTypeItem.classList.add('disabled');
+                    }
+                }
+            }
+        }
+    });
+
+    // Mouse move event - update dragging position
+    canvas.addEventListener('mousemove', (event) => {
+        event.preventDefault();
+        
+        if (state.isDragging && state.dragObject) {
+            // Calculate mouse position
+            const rect = canvas.getBoundingClientRect();
+            state.mouse.x = ((event.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+            state.mouse.y = -((event.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+            
+            // Update raycaster
+            state.raycaster.setFromCamera(state.mouse, state.camera);
+            
+            // Create intersection with ground plane
+            const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+            const intersectPoint = new THREE.Vector3();
+            
+            // Get intersection point 
+            state.raycaster.ray.intersectPlane(planeZ, intersectPoint);
+            
+            // Apply offset
+            intersectPoint.sub(state.offset);
+            
+            // Snap to grid
+            intersectPoint.x = Math.round(intersectPoint.x / 2) * 2;
+            intersectPoint.y = Math.round(intersectPoint.y / 2) * 2;
+            intersectPoint.z = 0;
+            
+            // Update position
+            state.dragObject.position.copy(intersectPoint);
+        }
+    });
+
+    // Mouse up event - end dragging
+    canvas.addEventListener('mouseup', (event) => {
+        if (event.button !== 0) return;
+        
+        if (state.isDragging && state.dragObject) {
+            // Reset scale
+            state.dragObject.scale.set(1, 1, 1);
+            
+            // End dragging
+            state.isDragging = false;
+            state.dragObject = null;
+        }
+    });
+
+    // Mouse leave event - end dragging if mouse leaves canvas
+    canvas.addEventListener('mouseleave', () => {
+        if (state.isDragging && state.dragObject) {
+            // Reset scale
+            state.dragObject.scale.set(1, 1, 1);
+            
+            // End dragging
+            state.isDragging = false;
+            state.dragObject = null;
+        }
+    });
+}
+
+// Create a new parking slot
+function createSlot(type, x, y) {
+    console.log(`Creating ${type} slot at (${x}, ${y})`);
+    
+    // Create cube geometry
+    const geometry = new THREE.BoxGeometry(1.8, 3.6, 0.5);
+    
+    // Create material based on slot type
+    const baseMaterial = new THREE.MeshStandardMaterial({
+        color: slotColors[type],
+        metalness: 0.3,
+        roughness: 0.4,
+    });
+    
+    // Create slot mesh
+    const slot = new THREE.Mesh(geometry, baseMaterial);
+    slot.position.set(x, y, 0.25); // Position at half height
+    slot.castShadow = true;
+    slot.receiveShadow = true;
+    
+    // Add slot metadata
+    slot.userData = {
+        type: type,
+        config: {}
+    };
+    
+    // Add glowing edges based on type
+    addGlowingEdges(slot, type);
+    
+    // Add to scene and slots array
+    state.scene.add(slot);
+    state.slots.push(slot);
+    
+    return slot;
+}
+
+// Add glowing edges to slot
+function addGlowingEdges(slot, type) {
+    const edgesGeometry = new THREE.EdgesGeometry(slot.geometry);
+    const edgesMaterial = new THREE.LineBasicMaterial({
+        color: slotColors[type],
+        linewidth: 2,
+        transparent: true,
+        opacity: 0.8
+    });
+
+    const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+    slot.add(edges);
+
+    // Add a point light for glow effect
+    const glow = new THREE.PointLight(slotColors[type], 0.5, 3);
+    glow.position.set(0, 0, 0.5);
+    slot.add(glow);
+}
+
+// Update slot counters in the UI
+function updateSlotCounters() {
+    elements.generalCount.textContent = state.availableSlots.general;
+    elements.vipCount.textContent = state.availableSlots.vip;
+    elements.emergencyCount.textContent = state.availableSlots.emergency;
+    elements.evCount.textContent = state.availableSlots.ev;
+}
+
+// Open slot configuration modal
+function openSlotConfigModal(slot) {
+    // Show/hide appropriate config forms based on slot type
+    const slotType = slot.userData.type;
+    elements.vipConfig.classList.toggle('hidden', slotType !== 'vip');
+    elements.emergencyConfig.classList.toggle('hidden', slotType !== 'emergency');
+
+    // Update modal title
+    document.getElementById('modal-title').textContent = `Configure ${slotType.toUpperCase()} Slot`;
+
+    // Fill in existing config values if any
+    if (slotType === 'vip') {
+        document.getElementById('vipName').value = slot.userData.config.name || '';
+        document.getElementById('vipCarNumber').value = slot.userData.config.carNumber || '';
+        document.getElementById('vipPhone').value = slot.userData.config.phone || '';
+        document.getElementById('vipDesignation').value = slot.userData.config.designation || '';
+    } else if (slotType === 'emergency') {
+        document.getElementById('emergencyType').value = slot.userData.config.type || 'police';
+        document.getElementById('emergencyVehicle').value = slot.userData.config.vehicle || '';
+        document.getElementById('emergencyContact').value = slot.userData.config.contact || '';
+    }
+
+    // Store reference to selected slot
+    state.selectedSlot = slot;
+
+    // Show modal
+    elements.slotConfigModal.classList.add('active');
+}
+
+// Initialize the application
+function init() {
+    // Step navigation event listeners
+    elements.nextToStep2.addEventListener('click', () => {
+        if (validateStep1()) {
+            // Initialize available slots first
+            state.availableSlots = {
+                general: parseInt(document.getElementById('generalSlots').value) || 0,
+                vip: parseInt(document.getElementById('vipSlots').value) || 0,
+                emergency: parseInt(document.getElementById('emergencySlots').value) || 0,
+                ev: parseInt(document.getElementById('evSlots').value) || 0
+            };
+            
+            // Update slot counters in UI
+            updateSlotCounters();
+            
+            // Enable all slot type items initially
+            document.querySelectorAll('.slot-type-item').forEach(item => {
+                item.classList.remove('disabled');
+                if (state.availableSlots[item.dataset.type] === 0) {
+                    item.classList.add('disabled');
+                }
+            });
+            
+            // Navigate to step 2
+            goToStep(2);
+            
+            // Clear any existing slots
+            while (state.slots.length > 0) {
+                const slot = state.slots.pop();
+                state.scene.remove(slot);
+            }
+            
+            // Initialize Three.js after DOM update
+            setTimeout(initThreeJS, 0);
+            
+            console.log('Available slots:', state.availableSlots);
+        }
+    });
+
+    elements.backToStep1.addEventListener('click', () => goToStep(1));
+    elements.nextToStep3.addEventListener('click', () => goToStep(3));
+    elements.backToStep2.addEventListener('click', () => goToStep(2));
+    elements.nextToStep4.addEventListener('click', () => {
+        goToStep(4);
+        updateSummary();
+    });
+    elements.backToStep3.addEventListener('click', () => goToStep(3));
+
+    // Slot type selection event listeners
+    elements.slotTypeItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (!item.classList.contains('disabled')) {
+                elements.slotTypeItems.forEach(el => el.classList.remove('selected'));
+                item.classList.add('selected');
+                state.selectedSlotType = item.dataset.type;
+                console.log('Selected slot type:', state.selectedSlotType);
+            }
+        });
+    });
+
+    // Canvas control event listeners
+    elements.zoomIn.addEventListener('click', () => {
+        if (state.camera && state.camera.position.z > 5) {
+            state.camera.position.z -= 2;
+        }
+    });
+
+    elements.zoomOut.addEventListener('click', () => {
+        if (state.camera && state.camera.position.z < 30) {
+            state.camera.position.z += 2;
+        }
+    });
+
+    elements.resetView.addEventListener('click', () => {
+        if (state.camera && state.controls) {
+            state.camera.position.set(0, -15, 20);
+            state.camera.lookAt(0, 0, 0);
+            state.controls.reset();
+        }
+    });
+
+    // Modal event listeners
+    elements.closeModal.addEventListener('click', () => {
+        elements.slotConfigModal.classList.remove('active');
+        state.selectedSlot = null;
+    });
+
+    elements.saveSlotConfig.addEventListener('click', () => {
+        if (state.selectedSlot) {
+            const slotType = state.selectedSlot.userData.type;
+
+            if (slotType === 'vip') {
+                state.selectedSlot.userData.config = {
+                    name: document.getElementById('vipName').value,
+                    carNumber: document.getElementById('vipCarNumber').value,
+                    phone: document.getElementById('vipPhone').value,
+                    designation: document.getElementById('vipDesignation').value
+                };
+            } else if (slotType === 'emergency') {
+                state.selectedSlot.userData.config = {
+                    type: document.getElementById('emergencyType').value,
+                    vehicle: document.getElementById('emergencyVehicle').value,
+                    contact: document.getElementById('emergencyContact').value
+                };
+            }
+
+            // Pulse effect to indicate successful configuration
+            const originalScale = state.selectedSlot.scale.clone();
+            state.selectedSlot.scale.set(1.2, 1.2, 1.2);
+            setTimeout(() => {
+                state.selectedSlot.scale.copy(originalScale);
+            }, 300);
+        }
+
+        elements.slotConfigModal.classList.remove('active');
+        state.selectedSlot = null;
+    });
+
+    // Save and load layout event listeners
+    elements.saveLayout.addEventListener('click', () => {
+        // Serialize state to localStorage
+        const saveData = {
+            parkingLot: state.parkingLot,
+            slots: state.slots.map(slot => ({
+                type: slot.userData.type,
+                position: { x: slot.position.x, y: slot.position.y, z: slot.position.z },
+                config: slot.userData.config
+            }))
+        };
+
+        localStorage.setItem('parkingLotDesign', JSON.stringify(saveData));
+        elements.successMessage.classList.remove('hidden');
+    });
+
+    elements.loadLayout.addEventListener('click', () => {
+        const saveData = localStorage.getItem('parkingLotDesign');
+        if (saveData) {
+            const parsedData = JSON.parse(saveData);
+
+            // Load parking lot data
+            state.parkingLot = parsedData.parkingLot;
+
+            // Fill in Step 1 form
+            document.getElementById('parkingLotName').value = state.parkingLot.name;
+            document.getElementById('totalSlots').value = state.parkingLot.totalSlots;
+            document.getElementById('generalSlots').value = state.parkingLot.generalSlots;
+            document.getElementById('vipSlots').value = state.parkingLot.vipSlots;
+            document.getElementById('emergencySlots').value = state.parkingLot.emergencySlots;
+            document.getElementById('evSlots').value = state.parkingLot.evSlots;
+
+            // Go back to Step 1 to start fresh
+            goToStep(1);
+        }
+    });
+
+    elements.editLayout.addEventListener('click', () => {
+        elements.successMessage.classList.add('hidden');
+        goToStep(2);
+    });
+}
+
+// Validate Step 1 form
+function validateStep1() {
+    const parkingLotName = document.getElementById('parkingLotName').value;
+    const totalSlots = parseInt(document.getElementById('totalSlots').value) || 0;
+    const generalSlots = parseInt(document.getElementById('generalSlots').value) || 0;
+    const vipSlots = parseInt(document.getElementById('vipSlots').value) || 0;
+    const emergencySlots = parseInt(document.getElementById('emergencySlots').value) || 0;
+    const evSlots = parseInt(document.getElementById('evSlots').value) || 0;
+
+    if (!parkingLotName) {
+        alert('Please enter a parking lot name.');
+        return false;
+    }
+
+    if (totalSlots <= 0) {
+        alert('Total slots must be greater than 0.');
+        return false;
+    }
+
+    const sumOfSlots = generalSlots + vipSlots + emergencySlots + evSlots;
+    if (sumOfSlots !== totalSlots) {
+        alert(`Sum of all slot types (${sumOfSlots}) must equal total slots (${totalSlots}).`);
+        return false;
+    }
+
+    if (emergencySlots > 3) {
+        alert('Maximum 3 emergency slots allowed.');
+        return false;
+    }
+
+    // Update state with form values
+    state.parkingLot = {
+        name: parkingLotName,
+        totalSlots,
+        generalSlots,
+        vipSlots,
+        emergencySlots,
+        evSlots
+    };
+
+    return true;
+}
+
+// Update summary in Step 4
+function updateSummary() {
+    document.getElementById('summary-name').textContent = `Parking Lot Name: ${state.parkingLot.name}`;
+    document.getElementById('summary-total').textContent = `Total Slots: ${state.parkingLot.totalSlots}`;
+    document.getElementById('summary-general-count').textContent = `${state.parkingLot.generalSlots - state.availableSlots.general} / ${state.parkingLot.generalSlots} used`;
+    document.getElementById('summary-vip-count').textContent = `${state.parkingLot.vipSlots - state.availableSlots.vip} / ${state.parkingLot.vipSlots} used`;
+    document.getElementById('summary-emergency-count').textContent = `${state.parkingLot.emergencySlots - state.availableSlots.emergency} / ${state.parkingLot.emergencySlots} used`;
+    document.getElementById('summary-ev-count').textContent = `${state.parkingLot.evSlots - state.availableSlots.ev} / ${state.parkingLot.evSlots} used`;
+}
+
+// Navigation between steps
+function goToStep(step) {
+    state.currentStep = step;
+
+    // Update step indicators
+    elements.steps.forEach(el => {
+        el.classList.toggle('active', parseInt(el.dataset.step) === step);
+    });
+
+    // Show/hide step content
+    elements.stepContents.forEach((el, index) => {
+        el.classList.toggle('hidden', index + 1 !== step);
+    });
+}
+
+// Initialize the application when DOM is ready
+document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- better oneeeeeeeeeeeeeeeeeeeee -->

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="canvas-container"></div>
+
+    <header class="header">
+        <div>
+            <i class="fas fa-car-alt" style="color: #4facfe; margin-right: 10px;"></i>
+            SmartPark
+        </div>
+        <div class="time" id="clock">00:00:00</div>
+    </header>
+
+    <!-- LANDING PAGE -->
+    <div class="container" id="landing-page">
+        <div class="logo">SMART<span>PARK</span> PORTAL</div>
+        <div class="subtitle">Revolutionizing parking management with interactive 3D visualization and real-time
+            monitoring</div>
+
+        <div class="buttons-container">
+            <div class="button-3d" id="to-login-button">
+                <div class="icon"><i class="fas fa-lock"></i></div>
+                <div class="text">Login</div>
+            </div>
+
+            <div class="button-3d" id="to-register-button">
+                <div class="icon"><i class="fas fa-user-plus"></i></div>
+                <div class="text">Register</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER PAGE -->
+    <div class="container" id="register-page">
+        <div class="logo">SMART<span>PARK</span> PORTAL</div>
+
+        <div class="auth-form">
+            <div class="form-title">Register Organization</div>
+
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="org-name">Organization Name</label>
+                    <input type="text" id="org-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="org-email">Organization Email</label>
+                    <input type="email" id="org-email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="org-password">Password</label>
+                    <input type="password" id="org-password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="operator-name">Name of Parking Operator</label>
+                    <input type="text" id="operator-name" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+
+            <div class="alt-link">
+                Already have an account? <a href="#" id="register-to-login">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN PAGE -->
+    <div class="container" id="login-page">
+        <div class="logo">SMART<span>PARK</span> PORTAL</div>
+
+        <div class="auth-form">
+            <div class="form-title">Login to Your Account</div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+
+            <div class="alt-link">
+                Don't have an account? <a href="#" id="login-to-register">Register here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboard-page">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div id="org-name-display">Organization Name</div>
+            </div>
+            <button id="logout-btn" class="submit-btn" style="width: auto; padding: 10px 20px;">Logout</button>
+        </div>
+
+        <div class="slot-legend">
+            <div class="legend-item">
+                <div class="legend-color general-color"></div>
+                <span>General</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color vip-color"></div>
+                <span>VIP</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color emergency-color"></div>
+                <span>Emergency</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color ev-color"></div>
+                <span>EV Charging</span>
+            </div>
+        </div>
+
+        <div class="parking-map">
+            <div id="parking-scene"></div>
+            <div class="map-controls">
+                <div class="map-control-btn" id="zoom-in">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="map-control-btn" id="zoom-out">
+                    <i class="fas fa-minus"></i>
+                </div>
+                <div class="map-control-btn" id="reset-view">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Parking View Section -->
+        <div id="stats-section" class="stats-section">
+            <h2 class="section-title">Parking Analytics</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-bookmark"></i></div>
+                    <div class="stat-value" id="active-bookings">0</div>
+                    <div class="stat-label">Active Bookings</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-car"></i></div>
+                    <div class="stat-value" id="cars-logged">0</div>
+                    <div class="stat-label">Cars Logged</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-value" id="today-earnings">$0</div>
+                    <div class="stat-label">Today's Earnings</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="activity-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLOT MODAL -->
+    <div class="slot-modal" id="slot-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Slot Information</h3>
+                <button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="modal-info" id="modal-info">
+                <!-- Content will be dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVE BOOKINGS MODAL -->
+    <div class="slot-modal" id="bookings-modal">
+        <div class="modal-content" style="width: 90%; max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Active Bookings</h3>
+                <button class="close-modal" id="close-bookings-modal"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="bookings-list">
+                <!-- Bookings will be dynamically populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Air Quality Monitoring Section -->
+    <div id="air-quality-section" class="stats-section" style="padding-top: 0;">
+        <h2 class="section-title">Air Quality Monitoring</h2>
+
+        <div class="air-quality-container">
+            <!-- Each gas card -->
+            <div class="air-quality-card">
+                <div class="air-quality-header">
+                    <div class="air-quality-title">Carbon Monoxide (CO)</div>
+                    <div class="air-quality-status" id="co-status">Normal</div>
+                </div>
+                <div class="air-quality-meter">
+                    <div class="air-quality-bar" id="co-bar"></div>
+                </div>
+                <div class="air-quality-details">
+                    <div class="air-quality-value" id="co-value">2.1 ppm</div>
+                    <div class="air-quality-range">Safe: &lt; 9 ppm</div>
+                </div>
+            </div>
+
+            <div class="air-quality-card">
+                <div class="air-quality-header">
+                    <div class="air-quality-title">Nitrogen Dioxide (NO₂)</div>
+                    <div class="air-quality-status" id="no2-status">Normal</div>
+                </div>
+                <div class="air-quality-meter">
+                    <div class="air-quality-bar" id="no2-bar"></div>
+                </div>
+                <div class="air-quality-details">
+                    <div class="air-quality-value" id="no2-value">0.03 ppm</div>
+                    <div class="air-quality-range">Safe: &lt; 0.05 ppm</div>
+                </div>
+            </div>
+
+            <div class="air-quality-card">
+                <div class="air-quality-header">
+                    <div class="air-quality-title">Benzene (C₆H₆)</div>
+                    <div class="air-quality-status" id="benzene-status">Normal</div>
+                </div>
+                <div class="air-quality-meter">
+                    <div class="air-quality-bar" id="benzene-bar"></div>
+                </div>
+                <div class="air-quality-details">
+                    <div class="air-quality-value" id="benzene-value">0.8 ppb</div>
+                    <div class="air-quality-range">Safe: &lt; 5 ppb</div>
+                </div>
+            </div>
+
+            <div class="air-quality-card">
+                <div class="air-quality-header">
+                    <div class="air-quality-title">Ammonia (NH₃)</div>
+                    <div class="air-quality-status" id="nh3-status">Normal</div>
+                </div>
+                <div class="air-quality-meter">
+                    <div class="air-quality-bar" id="nh3-bar"></div>
+                </div>
+                <div class="air-quality-details">
+                    <div class="air-quality-value" id="nh3-value">0.5 ppm</div>
+                    <div class="air-quality-range">Safe: &lt; 25 ppm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="air-quality-overall">
+            <div class="overall-title">Overall Air Quality</div>
+            <div class="overall-status" id="overall-status">Good</div>
+            <div class="overall-description" id="overall-description">Air quality is within safe limits</div>
+        </div>
+    </div>
+
+    <div class="glow" id="glow"></div>
+
+   <script src="script.js"></script>
+</body>
+
+</html>
